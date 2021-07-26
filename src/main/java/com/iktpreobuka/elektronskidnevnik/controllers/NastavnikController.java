@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iktpreobuka.elektronskidnevnik.entities.Nastavnik;
+import com.iktpreobuka.elektronskidnevnik.entities.Predaje;
 import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
 import com.iktpreobuka.elektronskidnevnik.entities.Roditelj;
 import com.iktpreobuka.elektronskidnevnik.entities.Ucenik;
 import com.iktpreobuka.elektronskidnevnik.repositories.NastavnikRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredajeRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.NastavnikCustomValidator;
 
 @RestController
@@ -27,6 +30,10 @@ public class NastavnikController {
 	private NastavnikRepository nastavnikRepository;
 	@Autowired
 	private NastavnikCustomValidator nastavnikValidator;
+	@Autowired
+	private PredajeRepository predajeRepository;
+	@Autowired
+	private PredmetRepository predmetRepository;
 
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
@@ -46,13 +53,15 @@ public class NastavnikController {
 		nastavnikRepository.save(nastavnik);
 		return new ResponseEntity<>(nastavnik, HttpStatus.CREATED);
 	}
-	/*@RequestMapping(method = RequestMethod.PUT, value = "/predmeti")
+	@RequestMapping(method = RequestMethod.PUT, value = "/predmeti")
 	public ResponseEntity<?> connectNastavnikPredmet(@RequestParam Integer nastavnikId, @RequestParam Integer predmetId){
+		Predaje predaje = new Predaje();
 		Nastavnik nastavnik= nastavnikRepository.findById(nastavnikId).get();
 		Predmet predmet = predmetRepository.findById(predmetId).get();
-		nastavnik.setPredaje(predmet);
-		nastavnikRepository.save(nastavnik);
-		return new ResponseEntity<>(nastavnik,HttpStatus.CREATED);
+		predaje.setNastavnik(nastavnik);
+		predaje.setPredmet(predmet);
+		predajeRepository.save(predaje);
+		return new ResponseEntity<>(predaje,HttpStatus.CREATED);
 		
-	}*/
+	}
 }
