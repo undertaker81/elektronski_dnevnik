@@ -10,8 +10,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iktpreobuka.elektronskidnevnik.entities.Nastavnik;
 import com.iktpreobuka.elektronskidnevnik.entities.Odeljenje;
+import com.iktpreobuka.elektronskidnevnik.entities.Predaje;
+import com.iktpreobuka.elektronskidnevnik.entities.PredajeOdeljenju;
+import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
+import com.iktpreobuka.elektronskidnevnik.repositories.NastavnikRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.OdeljenjeRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredajeOdeljenjuRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredajeRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.OdeljenjeCustomValidator;
 
 @RestController
@@ -23,6 +31,10 @@ public class OdeljenjeController {
 	
 	@Autowired
 	private OdeljenjeCustomValidator odeljenjeValidator;
+	@Autowired
+	private PredajeRepository predajeRepository;
+	@Autowired
+	private PredajeOdeljenjuRepository predajeOdeljenjuRepository;
 	
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
@@ -35,6 +47,17 @@ public class OdeljenjeController {
 		odeljenje.setBrojRazreda(brojRazreda);
 		odeljenjeRepository.save(odeljenje);
 		return  new ResponseEntity<>(odeljenje, HttpStatus.CREATED);
+		
+	}
+	@RequestMapping(method = RequestMethod.PUT, value = "/odeljenja")
+	public ResponseEntity<?> connectNastavnikOdeljenje(@RequestParam Integer predajeId, @RequestParam Integer odeljenjeId){
+		PredajeOdeljenju predajeOdeljenju = new PredajeOdeljenju();
+		Predaje predaje= predajeRepository.findById(predajeId).get();
+		Odeljenje  odeljenje= odeljenjeRepository.findById(odeljenjeId).get();
+		predajeOdeljenju.setPredaje(predaje);
+		predajeOdeljenju.setOdeljenje(odeljenje);
+		predajeOdeljenjuRepository.save(predajeOdeljenju);
+		return new ResponseEntity<>(predajeOdeljenju,HttpStatus.CREATED);
 		
 	}
 }
