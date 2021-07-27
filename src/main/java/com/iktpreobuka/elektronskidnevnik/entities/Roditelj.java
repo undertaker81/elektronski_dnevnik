@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Roditelj extends UserEntity { // ParentEntity
+public class Roditelj extends UserEntity {
 
 	@Column(name = "email")
 	private String email;

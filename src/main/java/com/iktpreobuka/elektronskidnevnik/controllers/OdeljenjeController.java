@@ -36,6 +36,7 @@ public class OdeljenjeController {
 	@Autowired
 	private PredajeOdeljenjuRepository predajeOdeljenjuRepository;
 	
+	
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
 		binder.addValidators(odeljenjeValidator);

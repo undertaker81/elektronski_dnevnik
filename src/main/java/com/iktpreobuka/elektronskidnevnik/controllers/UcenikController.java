@@ -12,7 +12,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iktpreobuka.elektronskidnevnik.entities.Nastavnik;
+import com.iktpreobuka.elektronskidnevnik.entities.Odeljenje;
+import com.iktpreobuka.elektronskidnevnik.entities.Predaje;
+import com.iktpreobuka.elektronskidnevnik.entities.PredajeOdeljenju;
+import com.iktpreobuka.elektronskidnevnik.entities.PredajeStudentuIzOdeljenja;
+import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
 import com.iktpreobuka.elektronskidnevnik.entities.Ucenik;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredajeOdeljenjuRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.PredajeStudentuIzOdeljenjaRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.UcenikRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.UcenikCustomValidator;
@@ -26,9 +34,11 @@ public class UcenikController {
 
 	@Autowired
 	private UcenikCustomValidator ucenikValidator;
+	@Autowired
+	protected PredajeOdeljenjuRepository predajeOdeljenjuRepository;
 	
 	@Autowired
-	private PredmetRepository predmetRepository;
+	private PredajeStudentuIzOdeljenjaRepository predajeStudentuIzOdeljenjaRepository;
 
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
@@ -46,5 +56,15 @@ public class UcenikController {
 		ucenikRepository.save(ucenik);
 		return new ResponseEntity<>(ucenik, HttpStatus.CREATED);
 	}
-	
+	@RequestMapping(method = RequestMethod.PUT, value = "/predajestudentu")
+	public ResponseEntity<?> connectPredajeOdeljenjuIUcenik(@RequestParam Integer predajeOdeljenjuId, @RequestParam Integer ucenikId){
+		PredajeStudentuIzOdeljenja predajeUceniku = new PredajeStudentuIzOdeljenja();
+		PredajeOdeljenju predajeOdeljenju= predajeOdeljenjuRepository.findById(predajeOdeljenjuId).get();
+		Ucenik  ucenik= ucenikRepository.findById(ucenikId).get();
+		predajeUceniku.setPredajeOdeljenju(predajeOdeljenju);
+		predajeUceniku.setUcenik(ucenik);
+		predajeStudentuIzOdeljenjaRepository.save(predajeUceniku);
+		return new ResponseEntity<>(predajeUceniku,HttpStatus.CREATED);
+		
+	}
 }

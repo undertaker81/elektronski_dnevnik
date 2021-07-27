@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.iktpreobuka.elektronskidnevnik.entities.Nastavnik;
 import com.iktpreobuka.elektronskidnevnik.entities.Predaje;
 import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
-import com.iktpreobuka.elektronskidnevnik.entities.Roditelj;
-import com.iktpreobuka.elektronskidnevnik.entities.Ucenik;
 import com.iktpreobuka.elektronskidnevnik.repositories.NastavnikRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;

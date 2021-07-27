@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Ucenik extends UserEntity { // StudentEntity
 
 	@Column(name = "prosecnaOcena")
-	private Float prosecnaOcena;
+	private Double prosecnaOcena;
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinColumn
 	private Roditelj roditelj;
@@ -22,11 +22,11 @@ public class Ucenik extends UserEntity { // StudentEntity
 	@JoinColumn(name = "roditelj")
 	private PredajeOdeljenju predajeOdeljenju;
 
-	public Float getProsecnaOcena() {
+	public Double getProsecnaOcena() {
 		return prosecnaOcena;
 	}
 
-	public void setProsecnaOcena(Float prosecnaOcena) {
+	public void setProsecnaOcena(Double prosecnaOcena) {
 		this.prosecnaOcena = prosecnaOcena;
 	}
 
@@ -47,7 +47,7 @@ public class Ucenik extends UserEntity { // StudentEntity
 	}
 
 	public Ucenik(Integer id, String name, String lastName, String username, String password, RoleEntity role,
-			Float prosecnaOcena, Roditelj roditelj, PredajeOdeljenju predajeOdeljenju) {
+			Double prosecnaOcena, Roditelj roditelj, PredajeOdeljenju predajeOdeljenju) {
 		super(id, name, lastName, username, password, role);
 		this.prosecnaOcena = prosecnaOcena;
 		this.roditelj = roditelj;
@@ -63,5 +63,4 @@ public class Ucenik extends UserEntity { // StudentEntity
 		super(id, name, lastName, username, password, role);
 		// TODO Auto-generated constructor stub
 	}
-
 }
