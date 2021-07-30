@@ -95,13 +95,13 @@ public class UcenikController {
 PredajeStudentuIzOdeljenja predajeUcenikuOdeljenje= predajeStudentuIzOdeljenjaRepository.findById(psoId).get(); 
 		novaOcena.setPredajeUceniku(predajeUcenikuOdeljenje);		
 		ocenaRepository.save(novaOcena);
-		EmailObject emailObject	= new EmailObject();
+	
 		SimpleMailMessage message = new SimpleMailMessage();
-		emailObject.setTo(predajeUcenikuOdeljenje.getUcenik().getRoditelj().getEmail());
-		emailObject.setSubject("Vase dete je dobilo novu ocenu!");
-		emailObject.setText(("Ucenik " + predajeUcenikuOdeljenje.getUcenik().getName() + " " 
+		message.setTo(predajeUcenikuOdeljenje.getUcenik().getRoditelj().getEmail());
+		message.setSubject("Vase dete je dobilo novu ocenu!");
+		message.setText(("Ucenik " + predajeUcenikuOdeljenje.getUcenik().getName() + " " 
 		+ predajeUcenikuOdeljenje.getUcenik().getLastName() + " " + "je dobilo ocenu "
-				 + novaOcena.getOcena().toString() + " iz predmeta" + predajeUcenikuOdeljenje.getPredajeOdeljenju().getPredaje().getPredmet() +
+				 + novaOcena.getOcena().toString() + " iz predmeta " + predajeUcenikuOdeljenje.getPredajeOdeljenju().getPredaje().getPredmet() +
 				 " kod nastavnika " + predajeUcenikuOdeljenje.getPredajeOdeljenju().getPredaje().getNastavnik()));
 		emailSender.send(message);
 		return new ResponseEntity<>(novaOcena,HttpStatus.CREATED);
