@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,10 +46,7 @@ public class UserController {
 	public ResponseEntity<?> getAll() {
 		return new ResponseEntity<List<UserEntity>>((List<UserEntity>) userRepository.findAll(), HttpStatus.OK);
 	}
-	private List<UserEntity> getDB() {
-		List<UserEntity> users = new ArrayList<>();
-		return users;
-	}
+	
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	
 		// Dodaj novog korisnika
@@ -84,15 +82,12 @@ public class UserController {
 	else
 		return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
 }
-	/*@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}")
-	public ResponseEntity<?> deleteUserById(@RequestParam Integer userId){
-		Iterator<UserEntity> iterator = getDB().iterator();while (iterator.hasNext()) {
-			UserEntity user = iterator.next();
-			if (user.getId().equals(Id))
-				iterator.remove();
-			return user;
-		}
-		return null;*/
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable Integer id){
+		UserEntity user = userRepository.findById(id).get();
+		userRepository.delete(user);
+		return new ResponseEntity<>(user,HttpStatus.OK);
+	}
 	}
 
 	

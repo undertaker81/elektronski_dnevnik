@@ -54,6 +54,8 @@ public class OdeljenjeController {
 		predajeOdeljenju.setPredaje(predaje);
 		predajeOdeljenju.setOdeljenje(odeljenje);
 		predajeOdeljenjuRepository.save(predajeOdeljenju);
+		predaje.setPredajeOdeljenju(predajeOdeljenju);
+		predajeRepository.save(predaje);
 		return new ResponseEntity<>(predajeOdeljenju,HttpStatus.CREATED);
 		
 	}
