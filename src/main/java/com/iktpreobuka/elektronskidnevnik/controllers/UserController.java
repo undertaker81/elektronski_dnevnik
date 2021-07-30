@@ -1,6 +1,7 @@
 package com.iktpreobuka.elektronskidnevnik.controllers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -44,8 +45,11 @@ public class UserController {
 	public ResponseEntity<?> getAll() {
 		return new ResponseEntity<List<UserEntity>>((List<UserEntity>) userRepository.findAll(), HttpStatus.OK);
 	}
-	
-	List<UserEntity> users = new ArrayList<UserEntity>();
+	private List<UserEntity> getDB() {
+		List<UserEntity> users = new ArrayList<>();
+		return users;
+	}
+	private List<UserEntity> users = new ArrayList<UserEntity>();
 	
 		// Dodaj novog korisnika
 	@RequestMapping(path= "/users", method = RequestMethod.POST)
@@ -72,4 +76,23 @@ public class UserController {
 		return new ResponseEntity<UserEntity>(user,HttpStatus.CREATED);
 		
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/users/{id}")
+	public ResponseEntity<?> getUserById(@RequestParam Integer userId){
+		if(userId.equals(userId))
+		return new ResponseEntity<UserEntity>(HttpStatus.FOUND);
+	else
+		return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
 }
+	/*@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}")
+	public ResponseEntity<?> deleteUserById(@RequestParam Integer userId){
+		Iterator<UserEntity> iterator = getDB().iterator();while (iterator.hasNext()) {
+			UserEntity user = iterator.next();
+			if (user.getId().equals(Id))
+				iterator.remove();
+			return user;
+		}
+		return null;*/
+	}
+
+	

@@ -10,16 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.elektronskidnevnik.entities.Nastavnik;
 import com.iktpreobuka.elektronskidnevnik.entities.Odeljenje;
 import com.iktpreobuka.elektronskidnevnik.entities.Predaje;
 import com.iktpreobuka.elektronskidnevnik.entities.PredajeOdeljenju;
-import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
-import com.iktpreobuka.elektronskidnevnik.repositories.NastavnikRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.OdeljenjeRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeOdeljenjuRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeRepository;
-import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.OdeljenjeCustomValidator;
 
 @RestController

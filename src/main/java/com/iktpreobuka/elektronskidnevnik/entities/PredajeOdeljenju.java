@@ -26,35 +26,41 @@ public class PredajeOdeljenju {
 	@JoinColumn
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	private Odeljenje odeljenje;
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public Predaje getPredaje() {
 		return predaje;
 	}
+
 	public void setPredaje(Predaje predaje) {
 		this.predaje = predaje;
 	}
+
 	public Odeljenje getOdeljenje() {
 		return odeljenje;
 	}
+
 	public void setOdeljenje(Odeljenje odeljenje) {
 		this.odeljenje = odeljenje;
 	}
+
 	public PredajeOdeljenju(Integer id, Predaje predaje, Odeljenje odeljenje) {
 		super();
 		this.id = id;
 		this.predaje = predaje;
 		this.odeljenje = odeljenje;
 	}
+
 	public PredajeOdeljenju() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
+
 }
