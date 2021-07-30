@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.iktpreobuka.elektronskidnevnik.entities.Roditelj;
 import com.iktpreobuka.elektronskidnevnik.entities.Ucenik;
 import com.iktpreobuka.elektronskidnevnik.repositories.RoditeljRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.RoleRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.UcenikRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.RoditeljCustomValidator;
 
@@ -23,6 +24,8 @@ public class RoditeljController {
 	@Autowired
 	private RoditeljRepository roditeljRepository;
 	
+	@Autowired
+	private RoleRepository roleRepository;
 	@Autowired
 	private RoditeljCustomValidator roditeljValidator;
 	
@@ -43,6 +46,7 @@ public class RoditeljController {
 		roditelj.setUsername(userName);
 		roditelj.setPassword(password);
 		roditelj.setEmail(email);
+		roditelj.setRole(roleRepository.findById(4).get());
 		roditeljRepository.save(roditelj);
 		return new ResponseEntity<>(roditelj, HttpStatus.CREATED);	
 	}

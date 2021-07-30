@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,7 @@ import com.iktpreobuka.elektronskidnevnik.entities.Ucenik;
 import com.iktpreobuka.elektronskidnevnik.repositories.OcenaRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeOdeljenjuRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeStudentuIzOdeljenjaRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.RoleRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.UcenikRepository;
 import com.iktpreobuka.elektronskidnevnik.services.EmailService;
 import com.iktpreobuka.elektronskidnevnik.utils.UcenikCustomValidator;
@@ -41,12 +44,16 @@ public class UcenikController {
 	private UcenikCustomValidator ucenikValidator;
 	@Autowired
 	protected PredajeOdeljenjuRepository predajeOdeljenjuRepository;
-	
+
+	@Autowired
+	RoleRepository roleRepository;
 	@Autowired
 	protected OcenaRepository ocenaRepository;
 	@Autowired
 	private PredajeStudentuIzOdeljenjaRepository predajeStudentuIzOdeljenjaRepository;
 
+	@Autowired
+	JavaMailSender emailSender;
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
 		binder.addValidators(ucenikValidator);
@@ -60,37 +67,45 @@ public class UcenikController {
 		ucenik.setLastName(lastName);
 		ucenik.setUsername(userName);
 		ucenik.setPassword(password);
+		ucenik.setRole(roleRepository.findById(5).get());
 		ucenikRepository.save(ucenik);
 		return new ResponseEntity<>(ucenik, HttpStatus.CREATED);
 	}
+
 	@RequestMapping(method = RequestMethod.PUT, value = "/predajestudentu")
-	public ResponseEntity<?> connectPredajeOdeljenjuIUcenik(@RequestParam Integer predajeOdeljenjuId, @RequestParam Integer ucenikId){
+	public ResponseEntity<?> connectPredajeOdeljenjuIUcenik(@RequestParam Integer predajeOdeljenjuId,
+			@RequestParam Integer ucenikId) {
 		PredajeStudentuIzOdeljenja predajeUceniku = new PredajeStudentuIzOdeljenja();
-		PredajeOdeljenju predajeOdeljenju= predajeOdeljenjuRepository.findById(predajeOdeljenjuId).get();
-		Ucenik  ucenik= ucenikRepository.findById(ucenikId).get();
+		PredajeOdeljenju predajeOdeljenju = predajeOdeljenjuRepository.findById(predajeOdeljenjuId).get();
+		Ucenik ucenik = ucenikRepository.findById(ucenikId).get();
 		predajeUceniku.setPredajeOdeljenju(predajeOdeljenju);
 		predajeUceniku.setUcenik(ucenik);
 		predajeStudentuIzOdeljenjaRepository.save(predajeUceniku);
-		return new ResponseEntity<>(predajeUceniku,HttpStatus.CREATED);
-		
+		return new ResponseEntity<>(predajeUceniku, HttpStatus.CREATED);
+
 	}
+
 	@RequestMapping(method = RequestMethod.POST, value =  "/ocene")
 	public ResponseEntity<?> upisiOcenu(@RequestParam Integer ocena,
-			@RequestParam Polugodiste polugodiste,@RequestParam PredajeStudentuIzOdeljenja psoId,@RequestBody EmailObject emailObject){
+			@RequestParam Polugodiste polugodiste,@RequestParam Integer psoId){
 		Ocena novaOcena =  new Ocena();
 		novaOcena.setOcena(ocena);
 		novaOcena.setDatumUnosaOcene(LocalDate.now());
 		novaOcena.setPolugodiste(polugodiste);
-		novaOcena.setPredajeUceniku(psoId);
+PredajeStudentuIzOdeljenja predajeUcenikuOdeljenje= predajeStudentuIzOdeljenjaRepository.findById(psoId).get(); 
+		novaOcena.setPredajeUceniku(predajeUcenikuOdeljenje);		
 		ocenaRepository.save(novaOcena);
-		emailService.sendSimpleEmailMessage(emailObject);
+		EmailObject emailObject	= new EmailObject();
+		SimpleMailMessage message = new SimpleMailMessage();
+		emailObject.setTo(predajeUcenikuOdeljenje.getUcenik().getRoditelj().getEmail());
+		emailObject.setSubject("Vase dete je dobilo novu ocenu!");
+		emailObject.setText(("Ucenik " + predajeUcenikuOdeljenje.getUcenik().getName() + " " 
+		+ predajeUcenikuOdeljenje.getUcenik().getLastName() + " " + "je dobilo ocenu "
+				 + novaOcena.getOcena().toString() + " iz predmeta" + predajeUcenikuOdeljenje.getPredajeOdeljenju().getPredaje().getPredmet() +
+				 " kod nastavnika " + predajeUcenikuOdeljenje.getPredajeOdeljenju().getPredaje().getNastavnik()));
+		emailSender.send(message);
 		return new ResponseEntity<>(novaOcena,HttpStatus.CREATED);
 	}
-	//slanje maila
-
-
-	}
-
-
 	
 
+}

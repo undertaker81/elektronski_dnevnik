@@ -18,6 +18,7 @@ import com.iktpreobuka.elektronskidnevnik.entities.Predmet;
 import com.iktpreobuka.elektronskidnevnik.repositories.NastavnikRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredajeRepository;
 import com.iktpreobuka.elektronskidnevnik.repositories.PredmetRepository;
+import com.iktpreobuka.elektronskidnevnik.repositories.RoleRepository;
 import com.iktpreobuka.elektronskidnevnik.utils.NastavnikCustomValidator;
 
 @RestController
@@ -32,6 +33,8 @@ public class NastavnikController {
 	private PredajeRepository predajeRepository;
 	@Autowired
 	private PredmetRepository predmetRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
@@ -48,6 +51,7 @@ public class NastavnikController {
 		nastavnik.setUsername(userName);
 		nastavnik.setPassword(password);
 		nastavnik.setEmail(email);
+		nastavnik.setRole(roleRepository.findById(2).get());
 		nastavnikRepository.save(nastavnik);
 		return new ResponseEntity<>(nastavnik, HttpStatus.CREATED);
 	}
