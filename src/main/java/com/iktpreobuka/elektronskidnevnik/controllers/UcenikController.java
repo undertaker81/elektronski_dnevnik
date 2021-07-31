@@ -1,7 +1,6 @@
 package com.iktpreobuka.elektronskidnevnik.controllers;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -12,13 +11,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.elektronskidnevnik.email.models.EmailObject;
 import com.iktpreobuka.elektronskidnevnik.entities.Ocena;
 import com.iktpreobuka.elektronskidnevnik.entities.Polugodiste;
 import com.iktpreobuka.elektronskidnevnik.entities.PredajeOdeljenju;
@@ -106,6 +104,15 @@ PredajeStudentuIzOdeljenja predajeUcenikuOdeljenje= predajeStudentuIzOdeljenjaRe
 		emailSender.send(message);
 		return new ResponseEntity<>(novaOcena,HttpStatus.CREATED);
 	}
-	
-
+	@RequestMapping(method = RequestMethod.DELETE, value = "/ucenik/{id}")
+	public ResponseEntity<?> deleteUcenikById(@PathVariable Integer id){
+	Ucenik ucenik = ucenikRepository.findById(id).get();
+	ucenikRepository.delete(ucenik);
+	return new ResponseEntity<>(ucenik,HttpStatus.OK);
+	}
+/*@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable Integer id){
+		UserEntity user = userRepository.findById(id).get();
+		userRepository.delete(user);
+		return new ResponseEntity<>(user,HttpStatus.OK);*/
 }

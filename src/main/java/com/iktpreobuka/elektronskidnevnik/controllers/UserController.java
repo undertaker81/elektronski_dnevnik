@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,19 +77,20 @@ public class UserController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/users/{id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/finduser")
 	public ResponseEntity<?> getUserById(@RequestParam Integer userId){
-		if(userId.equals(userId))
-		return new ResponseEntity<UserEntity>(HttpStatus.FOUND);
-	else
-		return new ResponseEntity<UserEntity>(HttpStatus.NOT_FOUND);
+		UserEntity user = userRepository.findById(userId).get();
+		return new ResponseEntity<>(user,HttpStatus.FOUND);
 }
+	
+	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable Integer id){
 		UserEntity user = userRepository.findById(id).get();
 		userRepository.delete(user);
 		return new ResponseEntity<>(user,HttpStatus.OK);
 	}
+	
 	}
 
 	
